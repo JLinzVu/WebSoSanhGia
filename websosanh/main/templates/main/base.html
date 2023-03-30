@@ -1,0 +1,323 @@
+{% load static %}
+{% load socialaccount %}
+{% providers_media_js %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&family=Saira+Condensed:wght@100&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static "/main/css/style.css" %}"/>
+    <link rel="stylesheet" href="{% static "/main/font/awesome/css/all.min.css" %}">
+</head>
+<body>
+  
+    <div id="navbar" class="container-fluid sticky-top pt-3 pb-3">
+        <nav class="container">
+            <div class="row" >
+                <a href="/" class="col-lg-2 d-flex flex-column bd-highlight align-items-center">
+                    <img class="" src="{% static "/main/img/logo.png" %}" alt="" style="width: 50px;">
+                    <span class="text-logo">SanPham<span class="text-logo-deco">Re</span>.com</span>
+                </a>
+                <div class="col-lg-8 pt-lg-3 mt-2">
+                    <form>
+                        <div class="input-group mb-3">
+                            <input type="text" name="q" class="text-search form-control form-control-lg" placeholder="Search Here">
+                            <button type="submit" class="btn-search input-group-text">
+                                <i class="fa fa-search"></i>&nbsp;&nbsp;Search
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="col-lg-2 d-flex justify-content-center align-items-center">
+                  {% if user.is_authenticated %}
+                      <div class="d-flex justify-content-center align-items-center">
+                      {{ user.socialaccount_set.all.0.extra_data.name }}
+                      <a href="/accounts/logout">
+                        <i id="user-icon" class="fas fa-user-circle fa-2x m-2">
+                        </i>
+                      </a>
+                  <!-- <i class="fa fa-bars fa-2x"></i> -->
+                  {% else %}
+                  <div class="login-modal">
+                    <div class="modal__overlay">
+                      
+                    </div>
+                  </div>
+                  <div class="login">
+                    <i id="login-button" class="fa fa-bars fa-2x"></i>
+                    <div class='login-field'>
+                      <form>
+                        <div class="row mb-3">
+                          <label class="col-sm-3 col-form-label">Username</label>
+                          <div class="col-sm-9">
+                            <input type="text" class="form-control">
+                          </div>
+                        </div>
+                        <div class="row mb-3">
+                          <label class="col-sm-3 col-form-label">Password</label>
+                          <div class="col-sm-9">
+                            <input type="password" class="form-control">
+                          </div>
+                        </div>
+                      </form>
+                      <div class="d-flex flex-row-reverse bd-highlight">
+                        <button type="submit" class="btn btn-primary">Sign in</button>
+                        <div style="margin-right:10px; margin-top:5px"><a href="/main/register">Create new an account.</a></div>
+                      </div>
+                      
+                      <div class="login-social">
+                        <a class="btn-fb" href="{% provider_login_url "facebook" method="oauth2" %}">
+                          <button class="loginBtn loginBtn--facebook">
+                            Login with Facebook
+                          </button>
+                        </a>
+                        <a href="btn-google">
+                          <button class="loginBtn loginBtn--google">
+                            Login with Google
+                          </button>
+                        </a>
+                      </div>
+                      
+                    </div>
+                  </div>
+                  
+
+                  <!-- <a href="{% provider_login_url "facebook" method="oauth2" %}">
+                  </a> -->
+                    <!-- <button><a href="{% provider_login_url "facebook" method="oauth2" %}">Google login</a></button> -->
+                  {% endif %}
+                </div>
+            </div>
+        </nav>
+    </div>
+    
+
+    <div class="container pb-5" style="margin-top: 20px; margin-bottom: 200px;">
+        <div class="row">
+            <div class="col-lg-2 ">
+                <div class="single category">
+                    <h3 class="side-title">Danh mục</h3>
+                    <ul class="list-unstyled">
+                        {% for category in categories %}
+                        <li>
+                            
+                              <div class="dropend">
+                                  <a href="/main/?cat={{ category.id }}"" data-bs-toggle="dropdown">
+                                      {{ category.name }}
+                                  </a>
+                                  
+                                  <ul class="dropdown-menu">
+                                      <div class="bridge">
+                                      </div>
+                                      {% for subcategory in subcategories %}
+                                          
+                                          {% if subcategory.parent_category_id == category.id %}
+                                              <li>
+                                                  <a class="dropdown-item" href="/main/?cat={{ category.id }}">
+                                                      {{ subcategory.name }}
+                                                  </a>
+                                              </li>
+                                          {% endif %}
+                                          
+                                      {% endfor %}
+                                  </ul>
+                                  
+                              </div>
+                          </li>
+                        {% endfor %}
+                    </ul>
+               </div>
+            </div>
+            
+            <div class="col-lg-10">
+                {% block content_products %}
+
+                {% endblock %}
+
+
+                {% block content_home %}
+
+                {% endblock %}
+
+
+                {% block content_home3 %}
+
+                {% endblock %}
+
+                {% block register %}
+                
+                {% endblock %}
+                {% block content_home2 %}
+
+                {% endblock %}
+                {% block content_home4 %}
+
+                {% endblock %}
+            </div>
+        </div>
+        
+    </div>
+    
+    <!-- Footer -->
+<footer class="bg-dark text-center text-white">
+    <!-- Grid container -->
+    <div class="container p-4">
+      <!-- Section: Social media -->
+      <section class="mb-4">
+        <!-- Facebook -->
+        <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+          ><i class="fab fa-facebook-f"></i
+        ></a>
+  
+        <!-- Twitter -->
+        <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+          ><i class="fab fa-twitter"></i
+        ></a>
+  
+        <!-- Google -->
+        <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+          ><i class="fab fa-google"></i
+        ></a>
+  
+        <!-- Instagram -->
+        <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+          ><i class="fab fa-instagram"></i
+        ></a>
+  
+        <!-- Linkedin -->
+        <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+          ><i class="fab fa-linkedin-in"></i
+        ></a>
+  
+        <!-- Github -->
+        <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+          ><i class="fab fa-github"></i
+        ></a>
+      </section>
+      <!-- Section: Social media -->
+  
+      <!-- Section: Text -->
+      <section class="mb-4">
+        <p>
+          Sản phẩm này tạo ra nhằm mục đích học tập. Mọi thắc mắc xin liên hệ tập đoàn E-Solution tại đường dẫn trong mục contact.
+        </p>
+      </section>
+      <!-- Section: Text -->
+  
+      <!-- Section: Links -->
+      <section class="">
+        <!--Grid row-->
+        <div class="row">
+          <!--Grid column-->
+          <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+            <h5 class="text-uppercase">Technology</h5>
+  
+            <ul class="list-unstyled mb-0">
+              <li>
+                <a href="#!" class="text-white">Link 1</a>
+              </li>
+              <li>
+                <a href="#!" class="text-white">Link 2</a>
+              </li>
+              <li>
+                <a href="#!" class="text-white">Link 3</a>
+              </li>
+              <li>
+                <a href="#!" class="text-white">Link 4</a>
+              </li>
+            </ul>
+          </div>
+          <!--Grid column-->
+  
+          <!--Grid column-->
+          <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+            <h5 class="text-uppercase">Contact</h5>
+  
+            <ul class="list-unstyled mb-0">
+              <li>
+                <a href="#!" class="text-white">Link 1</a>
+              </li>
+              <li>
+                <a href="#!" class="text-white">Link 2</a>
+              </li>
+              <li>
+                <a href="#!" class="text-white">Link 3</a>
+              </li>
+              <li>
+                <a href="#!" class="text-white">Link 4</a>
+              </li>
+            </ul>
+          </div>
+          <!--Grid column-->
+  
+          <!--Grid column-->
+          <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+            <h5 class="text-uppercase">Information</h5>
+  
+            <ul class="list-unstyled mb-0">
+              <li>
+                <a href="#!" class="text-white">Link 1</a>
+              </li>
+              <li>
+                <a href="#!" class="text-white">Link 2</a>
+              </li>
+              <li>
+                <a href="#!" class="text-white">Link 3</a>
+              </li>
+              <li>
+                <a href="#!" class="text-white">Link 4</a>
+              </li>
+            </ul>
+          </div>
+          <!--Grid column-->
+  
+          <!--Grid column-->
+          <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+            <h5 class="text-uppercase">Challenges in the future</h5>
+  
+            <ul class="list-unstyled mb-0">
+              <li>
+                <a href="#!" class="text-white">Link 1</a>
+              </li>
+              <li>
+                <a href="#!" class="text-white">Link 2</a>
+              </li>
+              <li>
+                <a href="#!" class="text-white">Link 3</a>
+              </li>
+              <li>
+                <a href="#!" class="text-white">Link 4</a>
+              </li>
+            </ul>
+          </div>
+          <!--Grid column-->
+        </div>
+        <!--Grid row-->
+      </section>
+      <!-- Section: Links -->
+    </div>
+    <!-- Grid container -->
+  
+    <!-- Copyright -->
+    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+      © 2021 Copyright:
+      <a class="text-white" href="https://mdbootstrap.com/">E-Solution Corperation</a>
+    </div>
+    <!-- Copyright -->
+  </footer>
+  <!-- Footer -->
+</div>
+</body>
+<script
+  src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+  crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="{% static "/main/javascript/scripts.js" %}"></script>
+</html>
